@@ -10,7 +10,7 @@ use Exporter qw/import/;
 our @EXPORT = qw/sqlstate_message/;
 
 my %SQLstate = sqlstate_known_codes();
-
+my %SQLclass = sqlstate_class_codes();
 
 =head2 C<sqlstate_message>
 
@@ -19,6 +19,8 @@ Returns a human readable message for a given C<SQLSTATE>
 =cut
 
 sub sqlstate_message ($) { $SQLstate{$_[0]} }
+
+sub sqlstate_class { substr($_[0],0,2) }
 
 
 
@@ -31,6 +33,16 @@ sub sqlstate_known_codes {
     );
     
     return %sqlstate_codes;
+}
+
+
+
+sub sqlstate_class_codes {
+    my %sqlclass_codes = map {
+        sqlstate_class($_) => sqlstate_message($_)
+    } grep { /..000/ } keys %SQLstate;
+    
+    return %sqlclass_codes;
 }
 
 
