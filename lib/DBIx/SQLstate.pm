@@ -10,7 +10,6 @@ use Exporter qw/import/;
 our @EXPORT = qw/sqlstate_message/;
 
 my %SQLstate = (
-	foo => 'Hi there',
 );
 
 =head2 C<sqlstate_message>
