@@ -14,8 +14,9 @@ our @EXPORT = (
     'sqlstate_class_token',
 );
 
-my %SQLstate = sqlstate_known_codes();
-my %SQLclass = sqlstate_class_codes();
+
+my %SQLstate = ();
+my %SQLclass = ();
 
 =head2 C<sqlstate_message>
 
@@ -27,15 +28,15 @@ sub sqlstate_message ($) { $SQLstate{$_[0]} }
 
 sub sqlstate_token ($) { tokenize( sqlstate_message(shift) ) }
 
-sub sqlstate_class { substr($_[0],0,2) }
+sub sqlstate_class ($) { substr($_[0],0,2) }
 
 sub sqlstate_class_message ($) { $SQLclass{sqlstate_class($_[0])} }
 
 sub sqlstate_class_token ($) { tokenize( sqlstate_class_message(shift) ) }
 
+sub sqlstate_codes () { %SQLstate }
 
-
-sub sqlstate_known_codes {
+sub sqlstate_known_codes () {
     use DBIx::SQLstate::wikipedia;
     
     my %sqlstate_codes = (
@@ -46,14 +47,12 @@ sub sqlstate_known_codes {
     return %sqlstate_codes;
 }
 
-
-
-sub sqlstate_class_codes {
-    my %sqlclass_codes = map {
+sub sqlstate_class_codes () {
+    my %sqlstate_class_codes = map {
         sqlstate_class($_) => sqlstate_message($_)
-    } grep { /..000/ } keys %SQLstate;
+    } grep { /..000/ } keys %{{ sqlstate_codes() }};
     
-    return %sqlclass_codes;
+    return %sqlstate_class_codes;
 }
 
 
@@ -71,7 +70,7 @@ sub tokenize ($) {
 	$text =~ s/sql /sql_/ig;
 	$text =~ s/xml /xml_/ig;
 	$text =~ s/cli /cli_/ig;
-	$text =~ s/fdw /cli_/ig;
+	$text =~ s/fdw /fdw_/ig;
 	$text =~ s/null /null_/ig;
 	
 	
@@ -88,6 +87,11 @@ sub tokenize ($) {
 
 	return $text;
 }
+
+
+
+%SQLstate = sqlstate_known_codes();
+%SQLclass = sqlstate_class_codes();
 
 
 
