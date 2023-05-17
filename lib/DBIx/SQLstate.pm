@@ -18,11 +18,6 @@ our @EXPORT = (
 my %SQLstate = ();
 my %SQLclass = ();
 
-=head2 C<sqlstate_message>
-
-Returns a human readable message for a given C<SQLSTATE>
-
-=cut
 
 sub sqlstate_message ($) { $SQLstate{$_[0]} }
 
