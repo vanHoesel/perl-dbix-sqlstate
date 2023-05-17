@@ -1,5 +1,43 @@
 package DBIx::SQLstate;
 
+
+
+=head1 NAME
+
+DBIx::SQLstate - message lookup and tokenization of errors
+
+=head1 SYNOPSIS
+
+    use DBI;
+    use DBIx::SQLstate;
+    
+    my $dbh = DBI->connect($data_source, $username, $password,
+        {
+            HandleError => sub {
+                my $msg = shift;
+                my $h   = shift;
+                
+                my $state = $h->state;
+                
+                my $message = sprintf("%s - %s",
+                    $state,
+                    sqlstate_token($state)
+                    ||
+                    sqlstate_class_token($state)
+                    ||
+                    sqlstate_default_token()
+                );
+                
+                die $message;
+            }
+        }
+        
+    );
+
+=cut
+
+
+
 use strict;
 use warnings;
 
