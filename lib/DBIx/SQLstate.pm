@@ -5,6 +5,8 @@ use warnings;
 
 our $VERSION = 'v0.0.1';
 
+our $DEFAULT_MESSAGE = 'Unkown SQL-state';
+
 use Exporter qw/import/;
 
 our @EXPORT = (
@@ -12,6 +14,8 @@ our @EXPORT = (
     'sqlstate_token',
     'sqlstate_class_message',
     'sqlstate_class_token',
+    'sqlstate_default_message',
+    'sqlstate_default_token',
 );
 
 our @EXPORT_OK = (
@@ -33,6 +37,10 @@ sub sqlstate_class ($) { substr($_[0],0,2) }
 sub sqlstate_class_message ($) { $SQLclass{sqlstate_class($_[0])} }
 
 sub sqlstate_class_token ($) { tokenize( sqlstate_class_message(shift) ) }
+
+sub sqlstate_default_message () { $DEFAULT_MESSAGE }
+
+sub sqlstate_default_token () { tokenize( sqlstate_default_message ) }
 
 sub sqlstate_codes () { %SQLstate }
 
