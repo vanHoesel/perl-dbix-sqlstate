@@ -14,6 +14,11 @@ our @EXPORT = (
     'sqlstate_class_token',
 );
 
+our @EXPORT_OK = (
+    'sqlstate_codes',
+    'sqlstate_class_codes',
+);
+
 
 my %SQLstate = ();
 my %SQLclass = ();
