@@ -9,7 +9,9 @@ use Exporter qw/import/;
 
 our @EXPORT = (
     'sqlstate_message',
+    'sqlstate_token',
     'sqlstate_class_message',
+    'sqlstate_class_token',
 );
 
 my %SQLstate = sqlstate_known_codes();
@@ -23,9 +25,13 @@ Returns a human readable message for a given C<SQLSTATE>
 
 sub sqlstate_message ($) { $SQLstate{$_[0]} }
 
+sub sqlstate_token ($) { tokenize( sqlstate_message(shift) ) }
+
 sub sqlstate_class { substr($_[0],0,2) }
 
 sub sqlstate_class_message ($) { $SQLclass{sqlstate_class($_[0])} }
+
+sub sqlstate_class_token ($) { tokenize( sqlstate_class_message(shift) ) }
 
 
 
