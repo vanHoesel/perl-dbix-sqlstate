@@ -7,7 +7,10 @@ our $VERSION = 'v0.0.1';
 
 use Exporter qw/import/;
 
-our @EXPORT = qw/sqlstate_message/;
+our @EXPORT = (
+    'sqlstate_message',
+    'sqlstate_class_message',
+);
 
 my %SQLstate = sqlstate_known_codes();
 my %SQLclass = sqlstate_class_codes();
@@ -21,6 +24,8 @@ Returns a human readable message for a given C<SQLSTATE>
 sub sqlstate_message ($) { $SQLstate{$_[0]} }
 
 sub sqlstate_class { substr($_[0],0,2) }
+
+sub sqlstate_class_message ($) { $SQLclass{sqlstate_class($_[0])} }
 
 
 
