@@ -10,6 +10,14 @@ use Exporter qw/import/;
 our @EXPORT = qw/sqlstate_message/;
 
 my %SQLstate = (
+    # will be loaded below
+);
+
+use DBIx::SQLstate::wikipedia;
+
+%SQLstate = (
+	%SQLstate,
+	%DBIx::SQLstate::wikipedia::SQLstate,
 );
 
 =head2 C<sqlstate_message>
