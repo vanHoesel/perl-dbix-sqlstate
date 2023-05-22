@@ -104,6 +104,8 @@ sub sqlstate_class_codes () {
 
 
 sub tokenize ($) {
+    return if !defined $_[0];
+    
 	my $text = shift;
 
 	# remove rubish first
