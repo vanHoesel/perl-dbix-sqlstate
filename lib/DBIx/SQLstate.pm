@@ -85,12 +85,9 @@ sub sqlstate_codes () { %SQLstate }
 sub sqlstate_known_codes () {
     use DBIx::SQLstate::wikipedia;
     
-    my %sqlstate_codes = (
-        %SQLstate,
+    return (
         %DBIx::SQLstate::wikipedia::SQLstate,
-    );
-    
-    return %sqlstate_codes;
+    )
 }
 
 sub sqlstate_class_codes () {
