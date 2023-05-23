@@ -20,12 +20,7 @@ DBIx::SQLstate - message lookup and tokenization of errors
                 my $state = $h->state;
                 
                 my $message = sprintf("%s - %s",
-                    $state,
-                    sqlstate_token($state)
-                    ||
-                    sqlstate_class_token($state)
-                    ||
-                    sqlstate_default_token()
+                    $state, DBIx::SQLstate->token($state)
                 );
                 
                 die $message;
