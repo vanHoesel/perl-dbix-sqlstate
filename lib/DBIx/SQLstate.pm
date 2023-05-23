@@ -189,6 +189,32 @@ denotes "Warning" (class 01), "N" denotes "No data" (class 02) and "X" denotes
 
 
 
+=head1 CLASS METHODS
+
+The following two class methods have been added for the programmer convenience:
+
+=head2 C<message($sqlstate)>
+
+Returns a subclass-message or class-message for a given and exisitng SQLstate,
+or the default C<'Unkown SQL-state'>.
+
+    my $message = DBIx::SQLstate->message("25006");
+    #
+    # "read-only SQL-transaction"
+
+=head2 C<token($sqlstate)>
+
+Returns the tokenized (See L<tokenize>) version of the message from above.
+
+    $sqlstate = "22XXX"; # non existing code
+    $LOG->error(DBIx::SQLstate->token $sqlstate)
+    #
+    # logs an error with "DataException"
+
+=cut
+
+
+
 =head1 EXPORT_OK SUBROUTINES
 
 =head2 C<sqlstate_message($sqlstate)>
