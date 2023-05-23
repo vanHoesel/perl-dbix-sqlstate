@@ -243,6 +243,36 @@ For now, do not rely on the consitent case-folding, it may change in the future.
 
 
 
+sub message ($) {
+    my $class = shift;
+    my $sqlstate = shift;
+    
+    return
+        sqlstate_message($sqlstate)
+        //
+        sqlstate_class_message($sqlstate)
+        //
+        sqlstate_default_message()
+    ;
+}
+
+sub token ($) {
+    my $class = shift;
+    my $sqlstate = shift;
+    
+    my $message =
+        sqlstate_message($sqlstate)
+        //
+        sqlstate_class_message($sqlstate)
+        //
+        sqlstate_default_message()
+    ;
+    
+    return tokenize($message);
+}
+
+
+
 1;
 
 __END__
