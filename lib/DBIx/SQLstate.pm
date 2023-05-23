@@ -63,7 +63,7 @@ our @EXPORT_OK = (
 
 
 
-my %SQLstate = sqlstate_known_codes();
+my %SQLstate = ();
 
 
 
@@ -133,6 +133,10 @@ sub tokenize ($) {
 
 	return $text;
 }
+
+
+
+%SQLstate = sqlstate_known_codes();
 
 
 
