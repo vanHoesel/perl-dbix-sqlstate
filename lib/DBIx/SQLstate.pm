@@ -43,17 +43,31 @@ our $DEFAULT_MESSAGE = 'Unkown SQL-state';
 use Exporter qw/import/;
 
 our @EXPORT = (
-    'sqlstate_message',
-    'sqlstate_token',
-    'sqlstate_class_message',
-    'sqlstate_class_token',
-    'sqlstate_default_message',
-    'sqlstate_default_token',
 );
 
 our @EXPORT_OK = (
     'sqlstate_codes',
+    'sqlstate_message',
+    'sqlstate_token',
     'sqlstate_class_codes',
+    'sqlstate_class_message',
+    'sqlstate_class_token',
+    'sqlstate_default_message',
+    'sqlstate_default_token',
+    'sqlstate_class_codes',
+);
+
+our %EXPORT_TAGS = (
+    message => [
+        'sqlstate_message',
+        'sqlstate_class_message',
+        'sqlstate_default_message',
+    ],
+    token => [
+        'sqlstate_token',
+        'sqlstate_class_token',
+        'sqlstate_default_token',
+    ],
 );
 
 
@@ -174,7 +188,8 @@ denotes "Warning" (class 01), "N" denotes "No data" (class 02) and "X" denotes
 =cut
 
 
-=head1 EXPORTED SUBROUTINES
+
+=head1 EXPORT_OK SUBROUTINES
 
 =head2 C<sqlstate_message($sqlstate)>
 
