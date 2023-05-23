@@ -67,28 +67,47 @@ my %SQLstate = ();
 
 
 
-sub sqlstate_message ($) { $SQLstate{$_[0]} }
+sub sqlstate_message ($) {
+    return unless defined $_[0];
+    return $SQLstate{$_[0]};
+}
 
-sub sqlstate_token ($) { tokenize( sqlstate_message(shift) ) }
+sub sqlstate_token ($) {
+    return tokenize( sqlstate_message(shift) );
+}
 
-sub sqlstate_class ($) { substr($_[0],0,2) }
+sub sqlstate_class ($) {
+    return unless defined $_[0];
+    return substr($_[0],0,2);
+}
 
-sub sqlstate_class_message ($) { +{ sqlstate_class_codes() }->{sqlstate_class($_[0])} }
+sub sqlstate_class_message ($) {
+    return unless defined $_[0]; 
+    return +{ sqlstate_class_codes() }->{sqlstate_class($_[0])};
+}
 
-sub sqlstate_class_token ($) { tokenize( sqlstate_class_message(shift) ) }
+sub sqlstate_class_token ($) {
+    return tokenize( sqlstate_class_message(shift) );
+}
 
-sub sqlstate_default_message () { $DEFAULT_MESSAGE }
+sub sqlstate_default_message () {
+    return $DEFAULT_MESSAGE;
+}
 
-sub sqlstate_default_token () { tokenize( sqlstate_default_message ) }
+sub sqlstate_default_token () {
+    return tokenize( sqlstate_default_message );
+}
 
-sub sqlstate_codes () { %SQLstate }
+sub sqlstate_codes () {
+    return %SQLstate;
+}
 
 sub sqlstate_known_codes () {
     use DBIx::SQLstate::wikipedia;
     
     return (
         %DBIx::SQLstate::wikipedia::SQLstate,
-    )
+    );
 }
 
 sub sqlstate_class_codes () {
