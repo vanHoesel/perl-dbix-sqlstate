@@ -140,6 +140,90 @@ sub tokenize ($) {
 
 
 
+=head1 DESCRIPTION
+
+Database Management Systems, and L<DBI> have their own way of reporting errors.
+Very often, errors are quit expressive in what happened. Many SQL based systems
+do also include a SQL-State with each request. This module turns the SQL-State 5
+byte code into human readable strings.
+
+=head1 SQLSTATE Classes and Sub-Classes
+
+Programs calling a database which accords to the SQL standard receive an
+indication about the success or failure of the call. This return code - which is
+called SQLSTATE - consists of 5 bytes. They are divided into two parts: the
+first and second bytes contain a class and the following three a subclass. Each
+class belongs to one of four categories: "S" denotes "Success" (class 00), "W"
+denotes "Warning" (class 01), "N" denotes "No data" (class 02) and "X" denotes
+"Exception" (all other classes).
+
+=cut
+
+
+=head1 EXPORTED SUBROUTINES
+
+=head2 C<sqlstate_message($sqlstate)>
+
+Returns the human readable message defined for the given SQL-State code.
+
+    my $sqlstate = '25006';
+    say sqlstate_message();
+    #
+    # prints "read-only SQL-transaction"
+
+=head2 C<sqlstate_token($sqlstate)>
+
+Returns a tokenized string (See L<DBIx::SQLstate::tokenize>).
+
+    my $sqlstate = '01007';
+    $LOG->warn sqlstate_token($sqlstate);
+    #
+    # logs a warning message with "PrivilegeNotGranted"
+
+=head2 C<sqlstate_class($sqlstate)>
+
+Returns the 2-byte SQL-state class code.
+
+=head2 C<sqlstate_class_message($sqlstate)>
+
+Returns the human readable message for the SQL-state class. This might be useful
+reduce the amount of variations of log-messages. But since not all SQLstate
+codes might be present in the current table, this will provide a decent fallback
+message.
+
+    my $sqlstate = '22X00'; # a madeup code
+    my $m = sqlstate_message($sqlstate) // sqlstate_class_message($sqlstate);
+    say $m;
+    #
+    # prints "data exception"
+
+=head2 C<sqlstate_class_token($sqlstate)>
+
+Returns the tokenized string for the above L<sqlstate_class_message>. See
+L<tokenize>.
+
+=head2 C<sqlstate_default_message()>
+
+Returns a default message. The value can be set with
+C<our $DBIx::SQLstate::$DEFAULT_MESSAGE>, and defaults to C<'Unkown SQL-state'>.
+
+=head2 C<sqlstate_default_token()>
+
+Returns the tokenized version of the default message.
+
+=head1 Tokenization
+
+The tokenized strings can be useful in logging, or for L<Throwable> ( or 
+L<Exception::Class>) object creations etc. These are mostly camel-case. However,
+for some common abreviations, like 'SQL', 'XML' or 'XQuery' this module tries to
+correct the charactercase-folding.
+
+For now, do not rely on the consitent case-folding, it may change in the future.
+
+=cut
+
+
+
 1;
 
 __END__
