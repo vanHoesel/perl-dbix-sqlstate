@@ -2,8 +2,10 @@ use Test::More;
 
 use DBIx::SQLstate;
 
-is sqlstate_token "HY017", 'InvalidUseOfAutomaticallyAllocatedDescriptorHandle',
-    "Got the right token for [HY017]";
+is( DBIx::SQLstate->token("HY017"),
+    'InvalidUseOfAutomaticallyAllocatedDescriptorHandle',
+    "Got the right token for [HY017]"
+);
 
 done_testing;
 
