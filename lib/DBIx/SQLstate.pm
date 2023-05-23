@@ -4,7 +4,7 @@ package DBIx::SQLstate;
 
 =head1 NAME
 
-DBIx::SQLstate - message lookup and tokenization of errors
+DBIx::SQLstate - message lookup and tokenization of SQL-State codes
 
 =head1 SYNOPSIS
 
