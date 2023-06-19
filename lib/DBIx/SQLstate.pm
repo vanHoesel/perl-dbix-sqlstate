@@ -36,7 +36,7 @@ DBIx::SQLstate - message lookup and tokenization of SQL-State codes
 use strict;
 use warnings;
 
-our $VERSION = 'v0.0.1';
+our $VERSION = 'v0.0.2';
 
 our $DEFAULT_MESSAGE = 'Unkown SQL-state';
 
