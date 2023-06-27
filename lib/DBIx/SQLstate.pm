@@ -295,13 +295,7 @@ sub token ($) {
     my $class = shift;
     my $sqlstate = shift;
     
-    my $message =
-        sqlstate_message($sqlstate)
-        //
-        sqlstate_class_message($sqlstate)
-        //
-        sqlstate_default_message()
-    ;
+    my $message = $class->message($sqlstate);
     
     return tokenize($message);
 }
