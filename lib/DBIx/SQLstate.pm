@@ -283,12 +283,11 @@ sub message ($) {
     my $class = shift;
     my $sqlstate = shift;
     
-    return
-        sqlstate_message($sqlstate)
-        //
-        sqlstate_class_message($sqlstate)
-        //
-        sqlstate_default_message()
+    for (
+        sqlstate_message($sqlstate),
+        sqlstate_class_message($sqlstate),
+        sqlstate_default_message(),
+    ) { return $_ if defined $_ }
     ;
 }
 
