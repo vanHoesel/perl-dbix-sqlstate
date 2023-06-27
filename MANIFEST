@@ -1,9 +1,10 @@
 CHANGES
 LICENSE.md
 Makefile.PL
+MANIFEST
 README.md
 cpanfile
 lib/DBIx/SQLstate/wikipedia.pm
 lib/DBIx/SQLstate.pm
 t/DBIx/SQLstate/use_ok.t
-t/DBIx/SQLstate/.t
+t/DBIx/SQLstate.t

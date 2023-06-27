@@ -36,7 +36,7 @@ DBIx::SQLstate - message lookup and tokenization of SQL-State codes
 use strict;
 use warnings;
 
-our $VERSION = 'v0.0.1';
+our $VERSION = 'v0.0.2';
 
 our $DEFAULT_MESSAGE = 'Unkown SQL-state';
 
@@ -283,12 +283,11 @@ sub message ($) {
     my $class = shift;
     my $sqlstate = shift;
     
-    return
-        sqlstate_message($sqlstate)
-        //
-        sqlstate_class_message($sqlstate)
-        //
-        sqlstate_default_message()
+    for (
+        sqlstate_message($sqlstate),
+        sqlstate_class_message($sqlstate),
+        sqlstate_default_message(),
+    ) { return $_ if defined $_ }
     ;
 }
 
@@ -296,13 +295,7 @@ sub token ($) {
     my $class = shift;
     my $sqlstate = shift;
     
-    my $message =
-        sqlstate_message($sqlstate)
-        //
-        sqlstate_class_message($sqlstate)
-        //
-        sqlstate_default_message()
-    ;
+    my $message = $class->message($sqlstate);
     
     return tokenize($message);
 }
