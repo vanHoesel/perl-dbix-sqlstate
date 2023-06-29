@@ -361,18 +361,7 @@ Returns the human readable message defined for the given SQL-State code.
     #
     # prints "read-only SQL-transaction"
 
-=head2 C<sqlstate_token($sqlstate)>
 
-Returns a tokenized string (See L<DBIx::SQLstate::tokenize>).
-
-    my $sqlstate = '01007';
-    $LOG->warn sqlstate_token($sqlstate);
-    #
-    # logs a warning message with "PrivilegeNotGranted"
-
-=head2 C<sqlstate_class($sqlstate)>
-
-Returns the 2-byte SQL-state class code.
 
 =head2 C<sqlstate_class_message($sqlstate)>
 
@@ -387,19 +376,45 @@ message.
     #
     # prints "data exception"
 
-=head2 C<sqlstate_class_token($sqlstate)>
 
-Returns the tokenized string for the above L<sqlstate_class_message>. See
-L<tokenize>.
 
 =head2 C<sqlstate_default_message()>
 
 Returns a default message. The value can be set with
 C<our $DBIx::SQLstate::$DEFAULT_MESSAGE>, and defaults to C<'Unkown SQL-state'>.
 
+
+
+=head2 C<sqlstate_token($sqlstate)>
+
+Returns a tokenized string (See L<DBIx::SQLstate::tokenize>).
+
+    my $sqlstate = '01007';
+    $LOG->warn sqlstate_token($sqlstate);
+    #
+    # logs a warning message with "PrivilegeNotGranted"
+
+
+
+=head2 C<sqlstate_class_token($sqlstate)>
+
+Returns the tokenized string for the above L<sqlstate_class_message>. See
+L<tokenize>.
+
+
+
+
 =head2 C<sqlstate_default_token()>
 
 Returns the tokenized version of the default message.
+
+
+
+=head2 C<sqlstate_class($sqlstate)>
+
+Returns the 2-byte SQL-state class code.
+
+
 
 =head1 Tokenization
 
