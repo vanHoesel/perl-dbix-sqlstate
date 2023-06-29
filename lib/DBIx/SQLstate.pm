@@ -164,6 +164,27 @@ sub tokenize ($) {
 
 
 
+sub constantize ($) {
+    return if !defined $_[0];
+    
+    my $text = shift;
+    
+    # remove common words
+    $text =~ s/\b(?:a|an|the)\b//ig;
+    
+    # substitute anything not an alpha-numeric
+    $text =~ s/[^\d\w]+/_/ig;
+    
+    # trim leading or trailing underscores
+    $text =~ s/^_|_$//ig;
+    
+    $text = uc($text);
+    
+    return $text;
+}
+
+
+
 %SQLstate = sqlstate_known_codes();
 
 
@@ -298,6 +319,15 @@ sub token ($) {
     my $message = $class->message($sqlstate);
     
     return tokenize($message);
+}
+
+sub const ($) {
+    my $class = shift;
+    my $sqlstate = shift;
+    
+    my $message = $class->message($sqlstate);
+    
+    return constantize($message);
 }
 
 
