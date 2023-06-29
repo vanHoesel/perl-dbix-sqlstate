@@ -79,7 +79,14 @@ our %EXPORT_TAGS = (
 );
 
 
-
+# message
+#
+# a class method that returns a human readable for a given SQL-state code
+#
+# This will fall through from the a subclass message to a class message and at
+# last the default. The 'message' routines use `undef` if there is no associated
+# message found.
+#
 sub message ($) {
     my $class = shift;
     my $sqlstate = shift;
@@ -92,6 +99,11 @@ sub message ($) {
     ;
 }
 
+# token
+#
+# a class method that will return the tokenized version of the above `message`
+# method.
+#
 sub token ($) {
     my $class = shift;
     my $sqlstate = shift;
@@ -101,6 +113,11 @@ sub token ($) {
     return tokenize($message);
 }
 
+# const
+#
+# a class method that will return the constant version of the above `message`
+# method.
+# 
 sub const ($) {
     my $class = shift;
     my $sqlstate = shift;
