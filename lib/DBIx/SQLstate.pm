@@ -47,18 +47,17 @@ our @EXPORT = (
 );
 
 our @EXPORT_OK = (
-    'sqlstate_codes',
-    'sqlstate_message',
-    'sqlstate_token',
-    'sqlstate_const',
     'sqlstate_class_codes',
+    'sqlstate_class_const',
     'sqlstate_class_message',
     'sqlstate_class_token',
-    'sqlstate_class_const',
+    'sqlstate_codes',
+    'sqlstate_const',
+    'sqlstate_default_const',
     'sqlstate_default_message',
     'sqlstate_default_token',
-    'sqlstate_default_const',
-    'sqlstate_class_codes',
+    'sqlstate_message',
+    'sqlstate_token',
 );
 
 our %EXPORT_TAGS = (
