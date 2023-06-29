@@ -133,34 +133,34 @@ sub sqlstate_class_codes () {
 sub tokenize ($) {
     return if !defined $_[0];
     
-	my $text = shift;
+    my $text = shift;
+    
+    # remove rubish first
+    $text =~ s/,/ /ig;
+    $text =~ s/-/ /ig;
+    $text =~ s/_/ /ig;
+    $text =~ s/\//_/ig;
+    
+    # create special cases
+    $text =~ s/sql /sql_/ig;
+    $text =~ s/xml /xml_/ig;
+    $text =~ s/cli /cli_/ig;
+    $text =~ s/fdw /fdw_/ig;
+    $text =~ s/null /null_/ig;
+    
+    
+    $text = join qq(_), map { lc } split /_/, $text;
+    $text = join qq(), map { ucfirst(lc($_)) } grep { $_ ne 'a' and $_ ne 'an' and $_ ne 'the' } split /\s+/, $text;
+    
+    # fix special cases
+    $text =~ s/sql_/SQL/ig;
+    $text =~ s/xml_/XML/ig;
+    $text =~ s/cli_/CLI/ig;
+    $text =~ s/fdw_/FDW/ig;
+    $text =~ s/null_/NULL/ig;
+    $text =~ s/xquery/XQuery/ig;
 
-	# remove rubish first
-	$text =~ s/,/ /ig;
-	$text =~ s/-/ /ig;
-	$text =~ s/_/ /ig;
-	$text =~ s/\//_/ig;
-	
-	# create special cases
-	$text =~ s/sql /sql_/ig;
-	$text =~ s/xml /xml_/ig;
-	$text =~ s/cli /cli_/ig;
-	$text =~ s/fdw /fdw_/ig;
-	$text =~ s/null /null_/ig;
-	
-	
-	$text = join qq(_), map { lc } split /_/, $text;
-	$text = join qq(), map { ucfirst(lc($_)) } grep { $_ ne 'a' and $_ ne 'an' and $_ ne 'the' } split /\s+/, $text;
-	
-	# fix special cases
-	$text =~ s/sql_/SQL/ig;
-	$text =~ s/xml_/XML/ig;
-	$text =~ s/cli_/CLI/ig;
-	$text =~ s/fdw_/FDW/ig;
-	$text =~ s/null_/NULL/ig;
-	$text =~ s/xquery/XQuery/ig;
-
-	return $text;
+    return $text;
 }
 
 
