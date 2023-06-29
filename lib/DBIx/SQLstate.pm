@@ -85,53 +85,127 @@ my %SQLstate = ();
 
 
 
+# sqlstate_message
+#
+# returns the human readable message for a known SQL-state
+# or
+# returns undef in all other cases (missing arg or non existent)
+#
 sub sqlstate_message ($) {
     return unless defined $_[0];
     return $SQLstate{$_[0]};
 }
 
-sub sqlstate_token ($) {
-    return tokenize( sqlstate_message(shift) );
-}
 
-sub sqlstate_const ($) {
-    return constantize( sqlstate_message(shift) );
-}
 
-sub sqlstate_class ($) {
-    return unless defined $_[0];
-    return substr($_[0],0,2);
-}
-
+# sqlstate_class_message
+#
+# returns a human readable message for any known SQL-state
+# or
+# returns undef in all other cases
+#
+# this is typically used when there is not a known SQL-state message
+#
 sub sqlstate_class_message ($) {
     return unless defined $_[0]; 
     return +{ sqlstate_class_codes() }->{sqlstate_class($_[0])};
 }
 
-sub sqlstate_class_token ($) {
-    return tokenize( sqlstate_class_message(shift) );
-}
 
-sub sqlstate_class_const ($) {
-    return constantize( sqlstate_class_message(shift) );
-}
 
+# sqlstate_default_message
+#
+# returns the default SQL-state message
+#
 sub sqlstate_default_message () {
     return $DEFAULT_MESSAGE;
 }
 
+
+
+# sqlstate_token
+#
+# returns a tokenized version of the sqlstate_message (or undef)
+#
+sub sqlstate_token ($) {
+    return tokenize( sqlstate_message(shift) );
+}
+
+
+
+# sqlstate_class_token
+#
+# returns the tokenized version of sqlstate_class_message
+#
+sub sqlstate_class_token ($) {
+    return tokenize( sqlstate_class_message(shift) );
+}
+
+
+
+# sqlstate_default_token
+#
+# returns the tokenized version of sqlstate_default_message
+#
 sub sqlstate_default_token () {
     return tokenize( sqlstate_default_message() );
 }
 
+
+
+# sqlstate_const
+#
+# returns the constant version of sqlstate_message
+#
+sub sqlstate_const ($) {
+    return constantize( sqlstate_message(shift) );
+}
+
+
+# sqlstate_class_const
+#
+# returns the constant version of sqlstate_class_message
+#
+sub sqlstate_class_const ($) {
+    return constantize( sqlstate_class_message(shift) );
+}
+
+
+
+# sqlstate_default_const
+#
+# returns the constant version of sqlstate_default_message
+#
 sub sqlstate_default_const () {
     return constantize( sqlstate_default_message() );
 }
 
+
+
+# sqlstate_class
+#
+# returns the 2-byte code from a given 5-byte SQL-state
+#
+sub sqlstate_class ($) {
+    return unless defined $_[0];
+    return substr($_[0],0,2);
+}
+
+
+
+# sqlstate_codes
+#
+# returns a list of key=value pairs of 'registered' SQL-states codes
+#
 sub sqlstate_codes () {
     return %SQLstate;
 }
 
+
+# sqlstate_known_codes
+#
+# returns the list of key/value pairs of all known SQL-state codes
+#
 sub sqlstate_known_codes () {
     use DBIx::SQLstate::wikipedia;
     
@@ -140,6 +214,14 @@ sub sqlstate_known_codes () {
     );
 }
 
+
+
+# sqlstate_class_codes
+#
+# returns a list of key/value pairs for 'registered' SQL-state classes
+#
+# that is, the keys are the 2-byte values of the SQL-states that end in '000'
+#
 sub sqlstate_class_codes () {
     my %sqlstate_class_codes = map {
         sqlstate_class($_) => sqlstate_message($_)
@@ -150,6 +232,12 @@ sub sqlstate_class_codes () {
 
 
 
+# tokenize
+#
+# turns any given string into a kind of CamelCase string
+#
+# removing non alpha-numeric characters, preserving or correcting capitalisation
+#
 sub tokenize ($) {
     return if !defined $_[0];
     
@@ -185,6 +273,10 @@ sub tokenize ($) {
 
 
 
+# constantize
+#
+# returns a uppercase snake-case version of the string
+#
 sub constantize ($) {
     return if !defined $_[0];
     
