@@ -86,6 +86,10 @@ sub sqlstate_token ($) {
     return tokenize( sqlstate_message(shift) );
 }
 
+sub sqlstate_const ($) {
+    return constantize( sqlstate_message(shift) );
+}
+
 sub sqlstate_class ($) {
     return unless defined $_[0];
     return substr($_[0],0,2);
@@ -100,12 +104,20 @@ sub sqlstate_class_token ($) {
     return tokenize( sqlstate_class_message(shift) );
 }
 
+sub sqlstate_class_const ($) {
+    return constantize( sqlstate_class_message(shift) );
+}
+
 sub sqlstate_default_message () {
     return $DEFAULT_MESSAGE;
 }
 
 sub sqlstate_default_token () {
     return tokenize( sqlstate_default_message );
+}
+
+sub sqlstate_default_const () {
+    return constantize( sqlstate_default_message );
 }
 
 sub sqlstate_codes () {
