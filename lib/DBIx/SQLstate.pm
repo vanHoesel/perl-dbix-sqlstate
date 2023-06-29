@@ -80,6 +80,38 @@ our %EXPORT_TAGS = (
 
 
 
+sub message ($) {
+    my $class = shift;
+    my $sqlstate = shift;
+    
+    for (
+        sqlstate_message($sqlstate),
+        sqlstate_class_message($sqlstate),
+        sqlstate_default_message(),
+    ) { return $_ if defined $_ }
+    ;
+}
+
+sub token ($) {
+    my $class = shift;
+    my $sqlstate = shift;
+    
+    my $message = $class->message($sqlstate);
+    
+    return tokenize($message);
+}
+
+sub const ($) {
+    my $class = shift;
+    my $sqlstate = shift;
+    
+    my $message = $class->message($sqlstate);
+    
+    return constantize($message);
+}
+
+
+
 my %SQLstate = ();
 
 
@@ -425,44 +457,6 @@ correct the charactercase-folding.
 
 For now, do not rely on the consitent case-folding, it may change in the future.
 
-=cut
-
-
-
-sub message ($) {
-    my $class = shift;
-    my $sqlstate = shift;
-    
-    for (
-        sqlstate_message($sqlstate),
-        sqlstate_class_message($sqlstate),
-        sqlstate_default_message(),
-    ) { return $_ if defined $_ }
-    ;
-}
-
-sub token ($) {
-    my $class = shift;
-    my $sqlstate = shift;
-    
-    my $message = $class->message($sqlstate);
-    
-    return tokenize($message);
-}
-
-sub const ($) {
-    my $class = shift;
-    my $sqlstate = shift;
-    
-    my $message = $class->message($sqlstate);
-    
-    return constantize($message);
-}
-
-
-
-1;
-
 
 
 =head1 AUTHOR
@@ -487,6 +481,9 @@ For details, see the full text of the license in the file LICENSE.
 
 =cut
 
+
+
+1;
 
 
 
