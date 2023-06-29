@@ -113,11 +113,11 @@ sub sqlstate_default_message () {
 }
 
 sub sqlstate_default_token () {
-    return tokenize( sqlstate_default_message );
+    return tokenize( sqlstate_default_message() );
 }
 
 sub sqlstate_default_const () {
-    return constantize( sqlstate_default_message );
+    return constantize( sqlstate_default_message() );
 }
 
 sub sqlstate_codes () {
