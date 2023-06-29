@@ -13,7 +13,7 @@ is( uc(DBIx::SQLstate->message("01XXX")),
 );
 
 is( uc(DBIx::SQLstate->message("XXXXX")),
-    uc('Unkown SQL-state'),
+    uc('Unknown SQL-state'),
     "Got the default message in any other case"
 );
 

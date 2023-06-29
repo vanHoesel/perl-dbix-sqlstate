@@ -38,7 +38,8 @@ use warnings;
 
 our $VERSION = 'v0.0.3';
 
-our $DEFAULT_MESSAGE = 'Unkown SQL-state';
+our $DEFAULT_MESSAGE = 'Unknown SQL-state';
+our $CONST_PREFIX    ='SQLSTATE';
 
 use Exporter qw/import/;
 
@@ -46,15 +47,17 @@ our @EXPORT = (
 );
 
 our @EXPORT_OK = (
-    'sqlstate_codes',
-    'sqlstate_message',
-    'sqlstate_token',
     'sqlstate_class_codes',
+    'sqlstate_class_const',
     'sqlstate_class_message',
     'sqlstate_class_token',
+    'sqlstate_codes',
+    'sqlstate_const',
+    'sqlstate_default_const',
     'sqlstate_default_message',
     'sqlstate_default_token',
-    'sqlstate_class_codes',
+    'sqlstate_message',
+    'sqlstate_token',
 );
 
 our %EXPORT_TAGS = (
@@ -68,7 +71,61 @@ our %EXPORT_TAGS = (
         'sqlstate_class_token',
         'sqlstate_default_token',
     ],
+    const => [
+        'sqlstate_const',
+        'sqlstate_class_const',
+        'sqlstate_default_const',
+    ],
 );
+
+
+# message
+#
+# a class method that returns a human readable for a given SQL-state code
+#
+# This will fall through from the a subclass message to a class message and at
+# last the default. The 'message' routines use `undef` if there is no associated
+# message found.
+#
+sub message ($) {
+    my $class = shift;
+    my $sqlstate = shift;
+    
+    for (
+        sqlstate_message($sqlstate),
+        sqlstate_class_message($sqlstate),
+        sqlstate_default_message(),
+    ) { return $_ if defined $_ }
+    ;
+}
+
+# token
+#
+# a class method that will return the tokenized version of the above `message`
+# method.
+#
+sub token ($) {
+    my $class = shift;
+    my $sqlstate = shift;
+    
+    my $message = $class->message($sqlstate);
+    
+    return tokenize($message);
+}
+
+# const
+#
+# a class method that will return the constant version of the above `message`
+# method.
+# 
+sub const ($) {
+    my $class = shift;
+    my $sqlstate = shift;
+    
+    my $message = $class->message($sqlstate);
+    
+    return constantize($message);
+}
 
 
 
@@ -76,41 +133,127 @@ my %SQLstate = ();
 
 
 
+# sqlstate_message
+#
+# returns the human readable message for a known SQL-state
+# or
+# returns undef in all other cases (missing arg or non existent)
+#
 sub sqlstate_message ($) {
     return unless defined $_[0];
     return $SQLstate{$_[0]};
 }
 
-sub sqlstate_token ($) {
-    return tokenize( sqlstate_message(shift) );
-}
 
-sub sqlstate_class ($) {
-    return unless defined $_[0];
-    return substr($_[0],0,2);
-}
 
+# sqlstate_class_message
+#
+# returns a human readable message for any known SQL-state
+# or
+# returns undef in all other cases
+#
+# this is typically used when there is not a known SQL-state message
+#
 sub sqlstate_class_message ($) {
     return unless defined $_[0]; 
     return +{ sqlstate_class_codes() }->{sqlstate_class($_[0])};
 }
 
-sub sqlstate_class_token ($) {
-    return tokenize( sqlstate_class_message(shift) );
-}
 
+
+# sqlstate_default_message
+#
+# returns the default SQL-state message
+#
 sub sqlstate_default_message () {
     return $DEFAULT_MESSAGE;
 }
 
-sub sqlstate_default_token () {
-    return tokenize( sqlstate_default_message );
+
+
+# sqlstate_token
+#
+# returns a tokenized version of the sqlstate_message (or undef)
+#
+sub sqlstate_token ($) {
+    return tokenize( sqlstate_message(shift) );
 }
 
+
+
+# sqlstate_class_token
+#
+# returns the tokenized version of sqlstate_class_message
+#
+sub sqlstate_class_token ($) {
+    return tokenize( sqlstate_class_message(shift) );
+}
+
+
+
+# sqlstate_default_token
+#
+# returns the tokenized version of sqlstate_default_message
+#
+sub sqlstate_default_token () {
+    return tokenize( sqlstate_default_message() );
+}
+
+
+
+# sqlstate_const
+#
+# returns the constant version of sqlstate_message
+#
+sub sqlstate_const ($) {
+    return constantize( sqlstate_message(shift) );
+}
+
+
+# sqlstate_class_const
+#
+# returns the constant version of sqlstate_class_message
+#
+sub sqlstate_class_const ($) {
+    return constantize( sqlstate_class_message(shift) );
+}
+
+
+
+# sqlstate_default_const
+#
+# returns the constant version of sqlstate_default_message
+#
+sub sqlstate_default_const () {
+    return constantize( sqlstate_default_message() );
+}
+
+
+
+# sqlstate_class
+#
+# returns the 2-byte code from a given 5-byte SQL-state
+#
+sub sqlstate_class ($) {
+    return unless defined $_[0];
+    return substr($_[0],0,2);
+}
+
+
+
+# sqlstate_codes
+#
+# returns a list of key=value pairs of 'registered' SQL-states codes
+#
 sub sqlstate_codes () {
     return %SQLstate;
 }
 
+
+# sqlstate_known_codes
+#
+# returns the list of key/value pairs of all known SQL-state codes
+#
 sub sqlstate_known_codes () {
     use DBIx::SQLstate::wikipedia;
     
@@ -119,6 +262,14 @@ sub sqlstate_known_codes () {
     );
 }
 
+
+
+# sqlstate_class_codes
+#
+# returns a list of key/value pairs for 'registered' SQL-state classes
+#
+# that is, the keys are the 2-byte values of the SQL-states that end in '000'
+#
 sub sqlstate_class_codes () {
     my %sqlstate_class_codes = map {
         sqlstate_class($_) => sqlstate_message($_)
@@ -129,37 +280,70 @@ sub sqlstate_class_codes () {
 
 
 
+# tokenize
+#
+# turns any given string into a kind of CamelCase string
+#
+# removing non alpha-numeric characters, preserving or correcting capitalisation
+#
 sub tokenize ($) {
     return if !defined $_[0];
     
-	my $text = shift;
+    my $text = shift;
+    
+    # remove rubish first
+    $text =~ s/,/ /ig;
+    $text =~ s/-/ /ig;
+    $text =~ s/_/ /ig;
+    $text =~ s/\//_/ig;
+    
+    # create special cases
+    $text =~ s/sql /sql_/ig;
+    $text =~ s/xml /xml_/ig;
+    $text =~ s/cli /cli_/ig;
+    $text =~ s/fdw /fdw_/ig;
+    $text =~ s/null /null_/ig;
+    
+    
+    $text = join qq(_), map { lc } split /_/, $text;
+    $text = join qq(), map { ucfirst(lc($_)) } grep { $_ ne 'a' and $_ ne 'an' and $_ ne 'the' } split /\s+/, $text;
+    
+    # fix special cases
+    $text =~ s/sql_/SQL/ig;
+    $text =~ s/xml_/XML/ig;
+    $text =~ s/cli_/CLI/ig;
+    $text =~ s/fdw_/FDW/ig;
+    $text =~ s/null_/NULL/ig;
+    $text =~ s/xquery/XQuery/ig;
 
-	# remove rubish first
-	$text =~ s/,/ /ig;
-	$text =~ s/-/ /ig;
-	$text =~ s/_/ /ig;
-	$text =~ s/\//_/ig;
-	
-	# create special cases
-	$text =~ s/sql /sql_/ig;
-	$text =~ s/xml /xml_/ig;
-	$text =~ s/cli /cli_/ig;
-	$text =~ s/fdw /fdw_/ig;
-	$text =~ s/null /null_/ig;
-	
-	
-	$text = join qq(_), map { lc } split /_/, $text;
-	$text = join qq(), map { ucfirst(lc($_)) } grep { $_ ne 'a' and $_ ne 'an' and $_ ne 'the' } split /\s+/, $text;
-	
-	# fix special cases
-	$text =~ s/sql_/SQL/ig;
-	$text =~ s/xml_/XML/ig;
-	$text =~ s/cli_/CLI/ig;
-	$text =~ s/fdw_/FDW/ig;
-	$text =~ s/null_/NULL/ig;
-	$text =~ s/xquery/XQuery/ig;
+    return $text;
+}
 
-	return $text;
+
+
+# constantize
+#
+# returns a uppercase snake-case version of the string
+#
+sub constantize ($) {
+    return if !defined $_[0];
+    
+    my $text = shift;
+    
+    # remove common words
+    $text =~ s/\b(?:a|an|the)\b//ig;
+    
+    # substitute anything not an alpha-numeric
+    $text =~ s/[^\d\w]+/_/ig;
+    
+    # trim leading or trailing underscores
+    $text =~ s/^_|_$//ig;
+    
+    $text = uc($text);
+    $text = join '_', $CONST_PREFIX, $text
+        if defined $CONST_PREFIX;
+    
+    return $text;
 }
 
 
@@ -226,18 +410,7 @@ Returns the human readable message defined for the given SQL-State code.
     #
     # prints "read-only SQL-transaction"
 
-=head2 C<sqlstate_token($sqlstate)>
 
-Returns a tokenized string (See L<DBIx::SQLstate::tokenize>).
-
-    my $sqlstate = '01007';
-    $LOG->warn sqlstate_token($sqlstate);
-    #
-    # logs a warning message with "PrivilegeNotGranted"
-
-=head2 C<sqlstate_class($sqlstate)>
-
-Returns the 2-byte SQL-state class code.
 
 =head2 C<sqlstate_class_message($sqlstate)>
 
@@ -252,19 +425,45 @@ message.
     #
     # prints "data exception"
 
-=head2 C<sqlstate_class_token($sqlstate)>
 
-Returns the tokenized string for the above L<sqlstate_class_message>. See
-L<tokenize>.
 
 =head2 C<sqlstate_default_message()>
 
 Returns a default message. The value can be set with
 C<our $DBIx::SQLstate::$DEFAULT_MESSAGE>, and defaults to C<'Unkown SQL-state'>.
 
+
+
+=head2 C<sqlstate_token($sqlstate)>
+
+Returns a tokenized string (See L<DBIx::SQLstate::tokenize>).
+
+    my $sqlstate = '01007';
+    $LOG->warn sqlstate_token($sqlstate);
+    #
+    # logs a warning message with "PrivilegeNotGranted"
+
+
+
+=head2 C<sqlstate_class_token($sqlstate)>
+
+Returns the tokenized string for the above L<sqlstate_class_message>. See
+L<tokenize>.
+
+
+
+
 =head2 C<sqlstate_default_token()>
 
 Returns the tokenized version of the default message.
+
+
+
+=head2 C<sqlstate_class($sqlstate)>
+
+Returns the 2-byte SQL-state class code.
+
+
 
 =head1 Tokenization
 
@@ -274,35 +473,6 @@ for some common abreviations, like 'SQL', 'XML' or 'XQuery' this module tries to
 correct the charactercase-folding.
 
 For now, do not rely on the consitent case-folding, it may change in the future.
-
-=cut
-
-
-
-sub message ($) {
-    my $class = shift;
-    my $sqlstate = shift;
-    
-    for (
-        sqlstate_message($sqlstate),
-        sqlstate_class_message($sqlstate),
-        sqlstate_default_message(),
-    ) { return $_ if defined $_ }
-    ;
-}
-
-sub token ($) {
-    my $class = shift;
-    my $sqlstate = shift;
-    
-    my $message = $class->message($sqlstate);
-    
-    return tokenize($message);
-}
-
-
-
-1;
 
 
 
@@ -328,6 +498,9 @@ For details, see the full text of the license in the file LICENSE.
 
 =cut
 
+
+
+1;
 
 
 
