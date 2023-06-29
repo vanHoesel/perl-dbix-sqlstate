@@ -13,7 +13,7 @@ is( sqlstate_class_const("0100F"),
 );
 
 is( sqlstate_default_const(),
-    'SQLSTATE_UNKOWN_SQL_STATE',
+    'SQLSTATE_UNKNOWN_SQL_STATE',
     "Got the default constant without an exisitng SQL-state code"
 );
 

@@ -13,7 +13,7 @@ is( uc(sqlstate_class_message("0100F")),
 );
 
 is( uc(sqlstate_default_message()),
-    uc('Unkown SQL-state'),
+    uc('Unknown SQL-state'),
     "Got the default message without an exisitng SQL-state code"
 );
 

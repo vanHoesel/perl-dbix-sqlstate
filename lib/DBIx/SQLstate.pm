@@ -38,7 +38,7 @@ use warnings;
 
 our $VERSION = 'v0.0.3';
 
-our $DEFAULT_MESSAGE = 'Unkown SQL-state';
+our $DEFAULT_MESSAGE = 'Unknown SQL-state';
 our $CONST_PREFIX    ='SQLSTATE';
 
 use Exporter qw/import/;

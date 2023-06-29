@@ -13,7 +13,7 @@ is( sqlstate_class_token("0100F"),
 );
 
 is( sqlstate_default_token(),
-    'UnkownSQLstate',
+    'UnknownSQLstate',
     "Got the default token without an exisitng SQL-state code"
 );
 
