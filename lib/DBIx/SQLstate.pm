@@ -39,6 +39,7 @@ use warnings;
 our $VERSION = 'v0.0.3';
 
 our $DEFAULT_MESSAGE = 'Unkown SQL-state';
+our $CONST_PREFIX    ='SQLSTATE';
 
 use Exporter qw/import/;
 
@@ -179,6 +180,8 @@ sub constantize ($) {
     $text =~ s/^_|_$//ig;
     
     $text = uc($text);
+    $text = join '_', $CONST_PREFIX, $text
+        if defined $CONST_PREFIX;
     
     return $text;
 }
