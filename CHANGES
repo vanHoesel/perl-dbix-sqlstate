@@ -2,16 +2,28 @@ CHANGE LOG
 ==========
 
 
-2023-06-28 - v0.0.3
+2023-06-29 - v0.0.4
 -------------------
 
+### Added
+  - functionality to return ALL_CAPS_SNAKE_CASE, for more consistency
+
 ### Fixed
-  - compatabilility with Perl 5.8
+  - typo in 'Unknown SQL-state' default message
 
 ### Improved
   - test coverage
 
 
+
+2023-06-28 - v0.0.3
+-------------------
+
+### Fixed
+- compatabilility with Perl 5.8
+
+### Improved
+- test coverage
 
 2023-06-18 - v0.0.2
 -------------------
