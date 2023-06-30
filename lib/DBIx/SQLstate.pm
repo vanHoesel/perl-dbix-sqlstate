@@ -47,6 +47,10 @@ our @EXPORT = (
 );
 
 our @EXPORT_OK = (
+    'is_sqlstate_succes',
+    'is_sqlstate_warning',
+    'is_sqlstate_no_data',
+    'is_sqlstate_exception',
     'sqlstate_class_codes',
     'sqlstate_class_const',
     'sqlstate_class_message',
@@ -350,6 +354,27 @@ sub constantize ($) {
         if defined $CONST_PREFIX;
     
     return $text;
+}
+
+
+
+sub is_sqlstate_succes($) {
+    ...
+}
+
+
+sub is_sqlstate_warning($) {
+    ...
+}
+
+
+sub is_sqlstate_no_data($) {
+    ...
+}
+
+
+sub is_sqlstate_exception($) {
+    ...
 }
 
 
