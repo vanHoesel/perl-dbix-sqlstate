@@ -76,6 +76,12 @@ our %EXPORT_TAGS = (
         'sqlstate_class_const',
         'sqlstate_default_const',
     ],
+    predicates => [
+        'is_sqlstate_succes',
+        'is_sqlstate_warning',
+        'is_sqlstate_no_data',
+        'is_sqlstate_exception',
+    ],
 );
 
 
