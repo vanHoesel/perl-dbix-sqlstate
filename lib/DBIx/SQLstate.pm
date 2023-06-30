@@ -452,7 +452,6 @@ L<tokenize>.
 
 
 
-
 =head2 C<sqlstate_default_token()>
 
 Returns the tokenized version of the default message.
