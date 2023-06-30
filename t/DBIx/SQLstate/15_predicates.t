@@ -24,7 +24,7 @@ subtest "is_sqlstate_succes" => sub {
         "SQL-state 'XX000' is not success"
     );
     
-}
+};
 
 subtest "is_sqlstate_warning" => sub {
     
@@ -48,7 +48,7 @@ subtest "is_sqlstate_warning" => sub {
         "SQL-state 'XX000' is not warning"
     );
     
-}
+};
 
 subtest "is_sqlstate_no_data" => sub {
     
@@ -72,7 +72,7 @@ subtest "is_sqlstate_no_data" => sub {
         "SQL-state 'XX000' is not no_data"
     );
     
-}
+};
 
 subtest "is_sqlstate_exception" => sub {
     
@@ -96,7 +96,7 @@ subtest "is_sqlstate_exception" => sub {
         "SQL-state 'XX000' is exception"
     );
     
-}
+};
 
 done-testing;
 
