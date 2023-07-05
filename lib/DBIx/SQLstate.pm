@@ -358,23 +358,23 @@ sub constantize ($) {
 
 
 
-sub is_sqlstate_succes {
-    
+sub is_sqlstate_succes($) {
+    ...
 }
 
 
-sub is_sqlstate_warning {
-    
+sub is_sqlstate_warning($) {
+    ...
 }
 
 
-sub is_sqlstate_no_data {
-    
+sub is_sqlstate_no_data($) {
+    ...
 }
 
 
-sub is_sqlstate_exception {
-    
+sub is_sqlstate_exception($) {
+    ...
 }
 
 
