@@ -47,6 +47,10 @@ our @EXPORT = (
 );
 
 our @EXPORT_OK = (
+    'is_sqlstate_succes',
+    'is_sqlstate_warning',
+    'is_sqlstate_no_data',
+    'is_sqlstate_exception',
     'sqlstate_class_codes',
     'sqlstate_class_const',
     'sqlstate_class_message',
@@ -75,6 +79,12 @@ our %EXPORT_TAGS = (
         'sqlstate_const',
         'sqlstate_class_const',
         'sqlstate_default_const',
+    ],
+    predicates => [
+        'is_sqlstate_succes',
+        'is_sqlstate_warning',
+        'is_sqlstate_no_data',
+        'is_sqlstate_exception',
     ],
 );
 
@@ -348,6 +358,33 @@ sub constantize ($) {
 
 
 
+sub is_sqlstate_succes($) {
+    return '00' eq sqlstate_class($_[0])
+}
+
+
+sub is_sqlstate_warning($) {
+    return '01' eq sqlstate_class($_[0])
+}
+
+
+sub is_sqlstate_no_data($) {
+    return '02' eq sqlstate_class($_[0])
+}
+
+
+sub is_sqlstate_exception($) {
+    my $sqlstate_class = sqlstate_class($_[0]);
+    
+    return !!undef if '00' eq $sqlstate_class; 
+    return !!undef if '01' eq $sqlstate_class;
+    return !!undef if '02' eq $sqlstate_class;
+        
+    return  !undef;
+}
+
+
+
 %SQLstate = sqlstate_known_codes();
 
 
@@ -461,6 +498,31 @@ Returns the tokenized version of the default message.
 =head2 C<sqlstate_class($sqlstate)>
 
 Returns the 2-byte SQL-state class code.
+
+
+
+=head2 C<is_sqlstate_succes($sqlstate)>
+
+Returns I<true> is the SQL-state class is C<00>.
+
+
+
+=head2 C<is_sqlstate_warning($sqlstate)>
+
+Returns I<true> is the SQL-state class is C<01>.
+
+
+
+=head2 C<is_sqlstate_no_data($sqlstate)>
+
+Returns I<true> is the SQL-state class is C<02>.
+
+
+
+=head2 C<is_sqlstate_exception($sqlstate)>
+
+Returns I<true> is the SQL-state class is any other than the above mentioned
+C<00>, C<01>, or C<02>.
 
 
 
