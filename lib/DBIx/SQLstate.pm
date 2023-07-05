@@ -501,6 +501,31 @@ Returns the 2-byte SQL-state class code.
 
 
 
+=head2 C<is_sqlstate_succes($sqlstate)>
+
+Returns I<true> is the SQL-state class is C<00>.
+
+
+
+=head2 C<is_sqlstate_warning($sqlstate)>
+
+Returns I<true> is the SQL-state class is C<01>.
+
+
+
+=head2 C<is_sqlstate_no_data($sqlstate)>
+
+Returns I<true> is the SQL-state class is C<02>.
+
+
+
+=head2 C<is_sqlstate_exception($sqlstate)>
+
+Returns I<true> is the SQL-state class is any other than the above mentioned
+C<00>, C<01>, or C<02>.
+
+
+
 =head1 Tokenization
 
 The tokenized strings can be useful in logging, or for L<Throwable> ( or 
