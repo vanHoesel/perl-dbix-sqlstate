@@ -2,12 +2,20 @@ CHANGE LOG
 ==========
 
 
-2023-06-29 - v0.0.4
+2023-07-05 - v0.0.5
 -------------------
 
 ### Added
-  - functionality to return ALL_CAPS_SNAKE_CASE, for more consistency
+  - predicate functions for 'success', 'warning', 'no data' or 'exception'
 
+
+
+2023-06-29 - v0.0.4
+  -------------------
+  
+  ### Added
+    - functionality to return ALL_CAPS_SNAKE_CASE, for more consistency
+  
 ### Fixed
   - typo in 'Unknown SQL-state' default message
 

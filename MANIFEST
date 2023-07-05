@@ -12,4 +12,5 @@ t/DBIx/SQLstate/10_regression_tests.t
 t/DBIx/SQLstate/11_message.t
 t/DBIx/SQLstate/12_token.t
 t/DBIx/SQLstate/13_constant.t
+t/DBIx/SQLstate/15_predicates.t
 t/DBIx/SQLstate.t
