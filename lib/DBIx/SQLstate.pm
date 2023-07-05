@@ -359,22 +359,28 @@ sub constantize ($) {
 
 
 sub is_sqlstate_succes($) {
-    ...
+    return '00' eq sqlstate_class($_[0])
 }
 
 
 sub is_sqlstate_warning($) {
-    ...
+    return '01' eq sqlstate_class($_[0])
 }
 
 
 sub is_sqlstate_no_data($) {
-    ...
+    return '02' eq sqlstate_class($_[0])
 }
 
 
 sub is_sqlstate_exception($) {
-    ...
+    my $sqlstate_class = sqlstate_class($_[0]);
+    
+    return !!undef if '00' eq $sqlstate_class; 
+    return !!undef if '01' eq $sqlstate_class;
+    return !!undef if '02' eq $sqlstate_class;
+        
+    return  !undef;
 }
 
 
